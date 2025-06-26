@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VITConnect | Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-blue-50 font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+    <div class="font-bold text-xl text-blue-800">VITConnect</div>
+    <div class="space-x-4 text-sm">
+      <a href="index.html" class="text-blue-600 hover:underline">Home</a>
+      <a href="mentor.html" class="text-blue-600 hover:underline">Mentors</a>
+      <a href="skill.html" class="text-blue-600 hover:underline">Skill Exchange</a>
+      <a href="study.html" class="text-blue-600 hover:underline">Study Partner</a>
+      <a href="profile.html" class="text-blue-600 font-semibold underline">Profile</a>
+    </div>
+  </nav>
+
+  <!-- Profile Content -->
+  <section class="py-12">
+    <div class="max-w-3xl mx-auto px-6 bg-white p-6 rounded-lg shadow-md">
+      <div id="profileContent">
+        <!-- Dynamic profile content appears here -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Dynamic Script -->
+  <script>
+    const mentors = {
+      "sonia-reddy": {
+        name: "Sonia Reddy",
+        year: "2nd Year",
+        domain: "Web Development",
+        bio: "Frontend enthusiast and peer mentor.",
+        skills: ["HTML", "CSS", "React"],
+        status: "available"
+      },
+      "ankit-mishra": {
+        name: "Ankit Mishra",
+        year: "3rd Year",
+        domain: "Data Structures",
+        bio: "Love solving problems and guiding juniors.",
+        skills: ["C++", "DSA", "Leetcode"],
+        status: "booked"
+      }
+    };
+
+    const students = {
+      "anshika": {
+        name: "Anshika",
+        year: "2nd Year",
+        branch: "CSE",
+        email: "anshika@example.com",
+        subject: "Calculus",
+        time: "Evening",
+        learn: "DSA",
+        teach: "Python, Git, Canva",
+        bio: "I'm preparing for interviews and looking for a study buddy for DSA.",
+        status: "available"
+      },
+      "rahul-mehta": {
+        name: "Rahul Mehta",
+        year: "2nd Year",
+        branch: "CSE",
+        email: "rahul@example.com",
+        subject: "DSA",
+        time: "Morning",
+        learn: "Web Dev",
+        teach: "C++, DSA",
+        bio: "DSA crash revision partner needed.",
+        status: "booked"
+      }
+    };
+
+    function loadProfile() {
+      const params = new URLSearchParams(window.location.search);
+      const type = params.get("type");
+      const id = params.get("id");
+
+      let data;
+      if (type === "mentor") data = mentors[id];
+      if (type === "student") data = students[id];
+
+      if (!data) {
+        document.getElementById("profileContent").innerHTML = `<p class="text-red-600 text-center">Profile not found.</p>`;
+        return;
+      }
+
+      let content = `
+        <div class="flex items-center gap-4 mb-6">
+          <img src="https://api.dicebear.com/7.x/identicon/svg?seed=${id}" alt="avatar" class="w-20 h-20 rounded-full border-4 border-blue-600">
+          <div>
+            <h2 class="text-2xl font-bold">${data.name}</h2>
+            <p class="text-sm text-gray-600">${data.year}${data.branch ? ' · ' + data.branch : ''}</p>
+            ${data.email ? `<p class="text-sm text-gray-600">${data.email}</p>` : ''}
+          </div>
+        </div>`;
+
+      if (type === "mentor") {
+        content += `
+          <div class="mb-4">
+            <h3 class="font-semibold text-lg mb-1">Domain</h3>
+            <p class="text-gray-700">${data.domain}</p>
+          </div>
+          <div class="mb-4">
+            <h3 class="font-semibold text-lg mb-1">Bio</h3>
+            <p class="text-gray-700">${data.bio}</p>
+          </div>
+          <div class="mb-6">
+            <h3 class="font-semibold text-lg mb-1">Skills</h3>
+            <div class="flex flex-wrap gap-2">
+              ${data.skills.map(skill => `<span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">${skill}</span>`).join('')}
+            </div>
+          </div>`;
+      } else {
+        content += `
+          <div class="grid sm:grid-cols-2 gap-4 mb-4">
+            <div class="bg-green-100 text-green-800 p-3 rounded"><strong>I can teach:</strong> ${data.teach}</div>
+            <div class="bg-purple-100 text-purple-800 p-3 rounded"><strong>I want to learn:</strong> ${data.learn}</div>
+          </div>
+          <div class="mb-4">
+            <h3 class="font-semibold text-lg mb-1">Preferred Time</h3>
+            <p class="text-gray-700">${data.time}</p>
+          </div>
+          <div class="mb-6">
+            <h3 class="font-semibold text-lg mb-1">Bio</h3>
+            <p class="text-gray-700">${data.bio}</p>
+          </div>`;
+      }
+
+      content += `
+        <div class="text-center">
+          <button onclick="alert('Request sent!')" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold">Connect</button>
+        </div>
+      `;
+
+      document.getElementById("profileContent").innerHTML = content;
+    }
+
+    window.onload = loadProfile;
+  </script>
+</body>
+</html>

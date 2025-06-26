@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VITConnect | Study Partner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-blue-50 font-sans">
+
+   <!-- navbar -->
+
+<nav class="bg-blue-950 text-white px-6 py-4 flex justify-between items-center fixed top-0 left-0 w-full z-50">
+    <div class="text-xl font-bold">VITConnect</div>
+    <div class="space-x-6">
+  <div class="space-x-4 text-sm">
+    <a href="index.html" class="text-white-600 hover:underline">Home</a>
+    <a href="mentor.html" class="text-white-600 hover:underline">Mentors</a>
+    <a href="skill.html" class="text-white-600 hover:underline">Skill Exchange</a>
+    <a href="study.html" class="text-white-600 hover:underline">Study Partner</a>
+    <a href="profile.html" class="text-white-600 hover:underline">Profile</a>
+  </div>
+</nav>
+
+<!-- Study Partner Section -->
+
+<section class="py-16 bg-white">
+    <div class="max-w-5xl mx-auto px-6">
+      <h2 class="text-3xl font-bold mb-6 text-blue-900">Find a Study Partner</h2>
+
+
+    <!-- filters -->
+
+    <div class="flex flex-col md:flex-row gap-4 mb-6 justify-center">
+      <select id="studySubject" class="border p-2 rounded w-full">
+          <option value="">Subject</option>
+          <option value="Calculus">Calculus</option>
+          <option value="DSA">DSA</option>
+          <option value="Physics">Physics</option>
+          <option value="Chemistry">Chemistry</option>
+        </select>
+
+        <select id="preferredTime" class="border p-2 rounded w-full">
+          <option value="">Preferred Time</option>
+          <option value="Morning">Morning</option>
+          <option value="Afternoon">Afternoon</option>
+          <option value="Evening">Evening</option>
+          <option value="Night">Night</option>
+        </select>
+
+        <button onclick="searchStudyPartners()" class="bg-blue-600 text-white px-4 py-2 rounded">Search</button>
+      </div>
+
+      <!-- 🧑‍🎓 Cards Grid -->
+      <div id="studyPartnerGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+  </section>
+ 
+  
+  <!-- JavaScript Logic -->
+  <script>
+    const students = [
+      {
+        id: "anshika",
+        name: "Anshika",
+        subject: "Calculus",
+        time: "Evening",
+        bio: "Looking to prep for quiz together, flexible on weekends.",
+        status: "available"
+      },
+      {
+        id: "rahul-mehta",
+        name: "Rahul Mehta",
+        subject: "DSA",
+        time: "Morning",
+        bio: "DSA crash revision partner needed.",
+        status: "booked"
+      },
+      {
+        id: "alvanai",
+        name: "Alvanai",
+        subject: "Physics",
+        time: "Night",
+        bio: "Visual learner, prefers diagrams and group study.",
+        status: "available"
+      },
+      {
+        id: "priyastudent",
+        name: "Priya",
+        subject: "Chemistry",
+        time: "Afternoon",
+        bio: "Loves organic chemistry and collaborative learning.",
+        status: "available"
+      }
+    ];
+
+    function renderStudentCards(list = students) {
+      const grid = document.getElementById("studyPartnerGrid");
+      grid.innerHTML = '';
+      list.forEach(s => {
+        grid.innerHTML += `
+          <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-xl font-semibold text-green-800">${s.name}</h3>
+              <span class="text-sm ${s.status === 'available' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} px-2 py-1 rounded">${s.status.charAt(0).toUpperCase() + s.status.slice(1)}</span>
+            </div>
+            <p class="text-sm text-gray-600 mb-1">Subject: ${s.subject}</p>
+            <p class="text-sm text-gray-600 mb-1">Preferred Time: ${s.time}</p>
+            <p class="text-sm italic text-gray-500 mb-4">“${s.bio}”</p>
+            <div class="text-right">
+              <a href="profile.html?type=student&id=${s.id}" class="text-blue-600 underline text-sm">Show Profile</a>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function searchStudyPartners() {
+      const subject = document.getElementById('studySubject').value;
+      const time = document.getElementById('preferredTime').value;
+      let filtered = students;
+      if (subject) filtered = filtered.filter(u => u.subject === subject);
+      if (time) filtered = filtered.filter(u => u.time === time);
+      renderStudentCards(filtered);
+    }
+
+    renderStudentCards();
+  </script>
+
+</body>
+</html>
+    

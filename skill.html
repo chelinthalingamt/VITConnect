@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VITConnect | Skill Exchange</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-blue-50 font-sans">
+
+      <!-- navbar -->
+
+<nav class="bg-blue-950 text-white px-6 py-4 flex justify-between items-center fixed top-0 left-0 w-full z-50">
+    <div class="text-xl font-bold">VITConnect</div>
+    <div class="space-x-6">
+  <div class="space-x-4 text-sm">
+    <a href="index.html" class="text-white-600 hover:underline">Home</a>
+    <a href="mentor.html" class="text-white-600 hover:underline">Mentors</a>
+    <a href="skill.html" class="text-white-600 hover:underline">Skill Exchange</a>
+    <a href="study.html" class="text-white-600 hover:underline">Study Partner</a>
+    <a href="profile.html" class="text-white-600 hover:underline">Profile</a>
+  </div>
+</nav>
+
+ <!-- 🔁 Skill Exchange Section -->
+  <section id="skills" class="py-16">
+    <div class="max-w-5xl mx-auto px-6">
+      <h2 class="text-3xl font-bold mb-6 text-blue-900">Post Your Skill Exchange</h2>
+      
+      <!-- Form -->
+    <div class="flex flex-col sm:flex-row gap-4 mb-4">
+  <select id="skillToTeach" class="border p-2 rounded w-full">
+    <option value="">I can teach</option>
+    <option value="C++">C++</option>
+    <option value="Python">Python</option>
+    <option value="Web Dev">Web Dev</option>
+    <option value="Git & GitHub">Git & GitHub</option>
+    <option value="Canva">Canva</option>
+  </select>
+
+  <select id="skillToLearn" class="border p-2 rounded w-full">
+    <option value="">I want to learn</option>
+    <option value="Machine Learning">Machine Learning</option>
+    <option value="SQL">SQL</option>
+    <option value="DSA">DSA</option>
+    <option value="App Development">App Development</option>
+    <option value="Figma">Figma</option>
+  </select>
+
+  <button onclick="submitSkillExchange()" class="bg-blue-600 text-white px-4 py-2 rounded">Submit</button>
+</div>
+
+
+
+      <!-- Skill Posts Grid -->
+      <div id="skillPosts" class="space-y-4"></div>
+    </div>
+  </section>
+ <!-- 🧠 JavaScript -->
+  <script>
+    const skillPosts = [
+      { user: "Arjun", teach: "Web Dev", learn: "SQL" },
+      { user: "Vikram", teach: "C++", learn: "Hackathons" }
+    ];
+
+    function renderSkillPosts() {
+      const postDiv = document.getElementById('skillPosts');
+      postDiv.innerHTML = '';
+      skillPosts.forEach(p => {
+        postDiv.innerHTML += `
+          <div class="bg-white p-4 rounded shadow flex justify-between items-center">
+            <div>
+              <p class="text-lg"><strong>${p.teach}</strong> → ${p.learn}</p>
+              <p class="text-sm text-gray-500">Posted by: ${p.user}</p>
+            </div>
+            <a href="student-profile.html" class="text-blue-600 text-sm underline">Show Profile</a>
+          </div>`;
+      });
+    }
+
+    function submitSkillExchange() {
+      const teach = document.getElementById('skillToTeach').value.trim();
+      const learn = document.getElementById('skillToLearn').value.trim();
+      if (teach && learn) {
+        skillPosts.unshift({ user: "You", teach, learn });
+        renderSkillPosts();
+        document.getElementById('skillToTeach').value = '';
+        document.getElementById('skillToLearn').value = '';
+      }
+    }
+
+    // Initial render
+    renderSkillPosts();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!-- Mentor Section with Filters and Dynamic Cards -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VITConnect | Mentor Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-blue-100 font-sans">
+
+     <!-- navbar -->
+
+<nav class="bg-blue-950 text-white px-6 py-4 flex justify-between items-center fixed top-0 left-0 w-full z-50">
+    <div class="text-xl font-bold">VITConnect</div>
+    <div class="space-x-6">
+  <div class="space-x-4 text-sm">
+    <a href="index.html" class="text-white-600 hover:underline">Home</a>
+    <a href="mentor.html" class="text-white-600 hover:underline">Mentors</a>
+    <a href="skill.html" class="text-white-600 hover:underline">Skill Exchange</a>
+    <a href="study.html" class="text-white-600 hover:underline">Study Partner</a>
+    <a href="profile.html" class="text-white-600 hover:underline">Profile</a>
+  </div>
+</nav>
+
+
+  <!-- mentor section -->
+
+<section id="mentor" class="py-16 bg-gradient-to-b from-blue-50 to-blue-100">
+  <div class="max-w-6xl mx-auto px-6">
+    <h2 class="text-3xl font-bold text-center text-blue-900 mb-8">Find a Mentor</h2>
+
+    <!-- Filters -->
+    <div class="flex flex-wrap gap-4 mb-6 justify-center">
+      <select id="mentorDomain" class="border p-2 rounded">
+        <option value="">Select Domain</option>
+        <option value="Web Dev">Web Dev</option>
+        <option value="ML">Machine Learning</option>
+        <option value="App Dev">App Development</option>
+        <option value="DSA">Data Structures</option>
+      </select>
+      <select id="mentorYear" class="border p-2 rounded">
+        <option value="">Select Year</option>
+        <option value="1st Year">1st Year</option>
+        <option value="2nd Year">2nd Year</option>
+        <option value="3rd Year">3rd Year</option>
+        <option value="4th Year">4th Year</option>
+      </select>
+      <select id="mentorStatus" class="border p-2 rounded">
+        <option value="">Availability</option>
+        <option value="available">Available</option>
+        <option value="booked">Booked</option>
+      </select>
+      <select id="sortBy" class="border p-2 rounded">
+        <option value="">Sort By</option>
+        <option value="domain">Domain</option>
+        <option value="year">Year</option>
+      </select>
+      <button onclick="searchMentors()" class="bg-blue-600 text-white px-4 py-2 rounded">Search</button>
+    </div>
+<div>
+    <!-- Cards rendered by JS -->
+    <div id="mentorGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- JS inserts mentor cards here -->
+    </div>
+  </div>
+  </div>
+</section>
+ 
+
+<script>
+const mentors = [
+  {
+    id: "sonia-reddy",
+    name: "Sonia Reddy",
+    domain: "Web Development",
+    year: "2nd Year",
+    bio: "I love helping juniors with HTML, CSS and React.",
+    status: "available"
+  },
+  {
+    id: "ankit-mishra",
+    name: "Ankit Mishra",
+    domain: "Data Structures",
+    year: "3rd Year",
+    bio: "DSA mentor, problem-solving focused.",
+    status: "booked"
+  },
+  {
+    id: "priya-roy",
+    name: "Priya Roy",
+    domain: "Machine Learning",
+    year: "4th Year",
+    bio: "ML & AI enthusiast. Let’s learn together.",
+    status: "available"
+  }
+];
+
+function renderMentorCards() {
+  const grid = document.getElementById("mentorGrid");
+  grid.innerHTML = "";
+  mentors.forEach(m => {
+    grid.innerHTML += `
+      <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-xl font-semibold text-blue-800">${m.name}</h3>
+          <span class="text-sm ${m.status === 'available' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} px-2 py-1 rounded">${m.status.charAt(0).toUpperCase() + m.status.slice(1)}</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-1">Domain: ${m.domain}</p>
+        <p class="text-sm text-gray-600 mb-1">Year: ${m.year}</p>
+        <p class="text-sm italic text-gray-500 mb-4">“${m.bio}”</p>
+        <div class="text-right">
+          <a href="profile.html?type=mentor&id=sonia-reddy" class="text-blue-600 text-sm underline">Show Profile</a>
+
+        </div>
+      </div>
+    `;
+  });
+}
+
+
+renderMentorCards();
+</script>
+
+<button id="searchMentorBtn"
+        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+  Search
+</button>
+
+<script type="module">
+/* 2️⃣  Firebase bootstrap (keep your own config!) */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+import {
+  getFirestore, collection, query, where, getDocs
+} from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+
+const firebaseConfig = {/* …your keys… */};
+const app  = initializeApp(firebaseConfig);
+const db   = getFirestore(app);
+
+/* 3️⃣  DOM helpers */
+const $ = (id) => document.getElementById(id);
+const grid = $("mentorGrid");
+
+/* 4️⃣  Renderer that works for ANY list */
+function renderMentorCards(list) {
+  grid.innerHTML = "";
+  if (!list.length) {
+    grid.innerHTML = `<p class="col-span-full text-center text-gray-500">
+                        No mentors found for those filters.
+                      </p>`;
+    return;
+  }
+  list.forEach(m => {
+    grid.insertAdjacentHTML("beforeend", `
+      <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-xl font-semibold text-blue-800">${m.name}</h3>
+          <span class="text-sm ${m.status === 'available'
+              ? 'bg-green-100 text-green-700'
+              : 'bg-red-100 text-red-700'} px-2 py-1 rounded">
+            ${m.status[0].toUpperCase() + m.status.slice(1)}
+          </span>
+        </div>
+        <p class="text-sm text-gray-600 mb-1">Domain: ${m.domain}</p>
+        <p class="text-sm text-gray-600 mb-1">Year: ${m.year}</p>
+        <p class="text-sm italic text-gray-500 mb-4">“${m.bio}”</p>
+        <div class="text-right">
+          <a href="profile.html?type=mentor&id=${m.id}"
+             class="text-blue-600 text-sm underline">Show Profile</a>
+        </div>
+      </div>
+    `);
+  });
+}
+
+
+async function searchMentors() {
+  const domain   = $("mentorDomain").value;
+  const year     = $("mentorYear").value;
+  const status   = $("mentorStatus").value;      // availability
+  const sortBy   = $("sortBy").value;
+
+  // build constraints
+  let q = collection(db, "mentors");
+  const filters = [];
+  if (domain) filters.push(where("domain",  "==", domain));
+  if (year)   filters.push(where("year",    "==", year));
+  if (status) filters.push(where("status",  "==", status));
+
+  if (filters.length) q = query(q, ...filters);
+
+  // fetch & shape data
+  const snap = await getDocs(q);
+  let results = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+  // client-side sort (simple string sort)
+  if (sortBy === "domain") results.sort((a,b)=>a.domain.localeCompare(b.domain));
+  if (sortBy === "year")   results.sort((a,b)=>a.year.localeCompare(b.year));
+
+  renderMentorCards(results);
+}
+
+$("searchMentorBtn").addEventListener("click", searchMentors);
+
+searchMentors();     
+</script>
+
+
+</body>
+</html>
