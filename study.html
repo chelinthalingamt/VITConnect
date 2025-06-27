@@ -125,7 +125,28 @@
 
     renderStudentCards();
   </script>
+  <script type="module">
+  import { db } from './firebase-config.js';
+  import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+
+  document.getElementById('searchStudyBtn').addEventListener('click', async () => {
+    const subject = document.querySelector('select[name="subject"]').value;
+    const time = document.querySelector('select[name="time"]').value;
+
+    let q = query(collection(db, "studyPartners"),
+                  where("subject", "==", subject),
+                  where("preferredTime", "==", time));
+    const querySnapshot = await getDocs(q);
+    const resultsDiv = document.getElementById('studyResults');
+    resultsDiv.innerHTML = '';
+    querySnapshot.forEach((doc) => {
+      const partner = doc.data();
+      resultsDiv.innerHTML += `<div>${partner.name} - ${partner.subject} - ${partner.preferredTime}</div>`;
+    });
+  });
+  </script>
 
 </body>
 </html>
+    
     
