@@ -92,5 +92,26 @@
     renderSkillPosts();
   </script>
 
+  <script type="module">
+  import { db, auth } from './firebase-config.js';
+  import { setDoc, doc } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+
+  document.getElementById('skillForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const teach = document.querySelector('select[name="teach"]').value;
+    const learn = document.querySelector('select[name="learn"]').value;
+    const user = auth.currentUser;
+    if (!user) return alert("Please login");
+
+    await setDoc(doc(db, "skills", user.uid), {
+      teach,
+      learn,
+      userId: user.uid,
+      timestamp: Date.now()
+    });
+    alert("Skill exchange info saved!");
+  });
+  </script>
+
 </body>
 </html>
